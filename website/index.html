@@ -13,44 +13,51 @@
         <link rel="stylesheet" href="./style.css" />
     </head>
     <body>
-        <nav class="navbar navbar-expand-md bg-body-tertiary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">GIF Finder</a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <form class="d-flex" role="search">
-                        <select class="form-select me-3" id="search-option" aria-label="Search options">
-                            <option value="" selected>Search option</option>
-                            <option value="random">Random</option>
-                            <option value="search">Search</option>
-                            <option value="translate">Translate</option>
-                        </select>
-                        <input class="form-control me-3" id="keyword" type="search" placeholder="Keyword" aria-label="Search" />
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+        <header class="sticky-top">
+            <nav class="navbar navbar-expand-md bg-primary" data-bs-theme="dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">GIF Finder</a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <form class="d-flex" role="search">
+                            <select class="form-select me-3" id="query-type" aria-label="Search options">
+                                <option value="" selected>Query type...</option>
+                                <option value="random">Random</option>
+                                <option value="search">Search</option>
+                                <option value="translate">Translate</option>
+                            </select>
+                            <input class="form-control me-3" id="keyword" type="search" placeholder="Keyword" aria-label="Search" />
+                            <button class="btn btn-outline-light" type="submit">Search</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </nav>
-        <section class="image-container js-image-container">
-
+            </nav>
+        </header>
+        <section class="d-flex justify-content-end flex-wrap mt-3 me-4 visually-hidden js-page-control">
+            <label>Images per page:
+                <select name="per-page-selector" id="per-page-selector" class="js-per-page-selector">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>    
+            </label>
         </section>
-        <section class="paginataion-container js-pagination-container hidden">
-            <div class="pagination-container">
-                <button class="btn btn-outline-success me-1 js-prev">Prev</button><button class="btn btn-outline-success ms-1 js-next">Next</button>
+        <section class="image-container my-3 js-image-container"></section>
+        <section class="text-center mt-3 js-pagination-container visually-hidden">
+            <div>
+                <button class="btn btn-outline-primary js-prev">Prev</button><button class="btn btn-outline-primary ms-1 js-next">Next</button>
             </div>
-            <div class="pagination-container">
-                <p id="pagination-info"></p>
-            </div>
+            <p class="js-page-info text-center mb-4 "></p>
         </section>
         <script src="./main.js"></script>
         <script

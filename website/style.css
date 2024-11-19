@@ -1,52 +1,36 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
 
+body {
+    font-family: 'Sour Gummy';
 }
 
-/* to do
-1.  add @media to find screen size,
-    if below the bootstrap small (or extra small size)
-    set images and their containers to 80% width
-2.  styling for pagination-conainter
-3.  add custom body font from google
-4.  customze bootstrap colors on page and buttons
-5.  make prev and next buttons a little narrower (vertical)
-6.  verify against requirements
-7.  add feature to allow direct page jumping
-*/
-
-
-
-.image-container, .pagination-container {
+.image-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 }
 
-.pagination-container {
-    width: 50%;
-}
-
 .image-list-item {
     width: 250px;
     text-align: center;
-    background-color: lightgoldenrodyellow;
-    border: 1px solid goldenrod;
-    margin: 5px;
-}
-
-.pagination-button-item {
-    margin: 10px auto;
 }
 
 .image-list-item > img {
-    width: 90%;
-    padding: 5px;
-}
-
-.hidden {
-    visibility: hidden;
+    width: 95%;
+    padding: 3px;
 }
 
 .navbar-collapse {
     justify-content: right;
+}
+
+@media screen and (max-width: 320px) {
+    .image-list-item {
+        width: 300px;
+        text-align: center;
+    }
+    .image-list-item > img {
+        width: 100%;
+        padding: 3px 0px;
+    }
 }

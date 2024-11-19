@@ -1,11 +1,15 @@
 // variable initialization
+let pageSize = 10;
+let totalItems = 0;
 let totalPages = 1;
 let currentPage = 1;
 let offset = 0;
+let queryTypeElement = document.getElementById('query-type');
+let keywordElement = document.getElementById('keyword');
+let perPageElement = document.getElementById('per-page-selector');
 
 // constants initialization
 const API_KEY = '2H1hfhYVflid5QGVztHMFdkI6hOwXjb2';
-const PAGE_SIZE = 15;
 const qsParm = (searchOption) => searchOption === 'search' ? 'q' : searchOption === 'translate' ? 's' : 'tag';
 
 // render content functions
@@ -17,34 +21,36 @@ function inializePagination() {
 
 function renderPagination() {
     let paginationContainer = document.querySelector('.js-pagination-container');
-    if (totalPages > 1) {
-        paginationContainer.classList.remove('hidden');
-    } else {
-        paginationContainer.classList.add('hidden');
-    }
+    let pageControlElement = document.querySelector('.js-page-control');
+    let nextButton = document.querySelector('.js-next');
+    let prevButton = document.querySelector('.js-prev');
 
-    // todo
-    pagesText = `Page ${currentPage} of ${totalPages}`;
-    document.getElementById('pagination-info').innerText = pagesText;
-    if (currentPage === totalPages) {
-        document.querySelector('.js-next').classList.add('hidden');
-    } else if (currentPage === 1) {
-        document.querySelector('.js-prev').classList.add('hidden');
-    } else {
-        document.querySelector('.js-next').classList.remove('hidden');
-        document.querySelector('.js-prev').classList.remove('hidden');
-    }
+    pageControlElement.classList.remove('visually-hidden');
+    if (totalItems <= 10)
+        pageControlElement.classList.add('visually-hidden');
+
+    paginationContainer.classList.remove('visually-hidden');
+    nextButton.classList.remove('disabled');
+    prevButton.classList.remove('disabled');
+    if (totalPages === 1) 
+        paginationContainer.classList.add('visually-hidden');
+    if (currentPage === totalPages) 
+        nextButton.classList.add('disabled');
+    else if (currentPage === 1) 
+        prevButton.classList.add('disabled');
+    
+    document.querySelector('.js-page-info').innerText = `${currentPage} of ${totalPages}`;
 }
 
-function setTotalPageCount(totalItems) {
-    let pages = Math.floor(totalItems / PAGE_SIZE);
-    if (totalItems % PAGE_SIZE > 0) pages++;
+function setTotalPageCount() {
+    let pages = Math.floor(totalItems / pageSize);
+    if (totalItems % pageSize > 0) pages++;
     totalPages = pages;
 }
 
 function renderImages(imageList) {
     let imageListItems = imageList.data;
-    let totalItems = 0;
+    totalItems = 0;
     let html = '';
     if (Array.isArray(imageListItems)) {
         if (imageListItems.length === 0) {
@@ -52,32 +58,34 @@ function renderImages(imageList) {
         } else {
             for (let item of imageListItems) {
                 html += `<div class="image-list-item">
-                    <img src="${item.images.original.url}" />
+                    <img src="${item.images.original.url}" alt="${item.title}" />
                     </div>`;
             }
             totalItems = imageList.pagination.total_count;
         }
     } else {
         html += `<div class="image-list-item">
-            <img src="${imageListItems.images.original.url}" />
+            <img src="${imageListItems.images.original.url}" alt="${imageListItems.title}" />
             </div>`;
         totalItems = 1;
     }
     document.querySelector('.js-image-container').innerHTML = html;
-    setTotalPageCount(totalItems);
+    setTotalPageCount();
     renderPagination();
 }
 
-function getUrl(searchOption, keyword) {
-    let url = `https://api.giphy.com/v1/gifs/${searchOption}?api_key=${API_KEY}&limit=${PAGE_SIZE}&offset=${offset}`; 
-    if (keyword.trim() !== '') {
-        url += `&${qsParm(searchOption)}=${keyword}`;
+function getUrl() {
+    let queryType = queryTypeElement.value;
+    let keyword = keywordElement.value
+    let url = `https://api.giphy.com/v1/gifs/${queryType}?api_key=${API_KEY}&limit=${pageSize}&offset=${offset}`; 
+    if (keyword.trim() !== '' && queryType != 'random') {
+        url += `&${qsParm(queryType)}=${keyword}`;
     }
     return url;
 }
 
-async function fetchImageList(keyword, offset) {
-    let url = getUrl(keyword, offset);
+async function fetchImageList() {
+    let url = getUrl();
     let response = await fetch(url);
     let data = await response.json();
     renderImages(data);
@@ -90,33 +98,40 @@ async function fetchImageList(keyword, offset) {
 function handleSubmit(event) {
     event.preventDefault();
 
-    let searchOption = document.getElementById('search-option').value;
-    let keyword = document.getElementById('keyword').value;
+    let queryType = queryTypeElement.value;
+    let keyword = keywordElement.value;
     // check the input
-    if (searchOption === '') {
+    if (queryType === '') {
         alert('Select a Search option');
         return;
     } 
-    if (searchOption !== 'random' && keyword === '') {
+    if (queryType !== 'random' && keyword === '') {
         alert('Please enter a keyword.');
         return;
     }
 
     // input is good, proceed
     inializePagination();
-    fetchImageList(searchOption, keyword);
+    fetchImageList();
 }
 
 function handlePrevClick() {
-    offset -= PAGE_SIZE;
-    fetchImageList(document.getElementById('keyword').value, offset);
+    offset -= pageSize;
+    fetchImageList();
     currentPage -= 1;
 }
 
 function handleNextClick() {
-    offset += PAGE_SIZE;
-    fetchImageList(document.getElementById('keyword').value, offset);
+    offset += pageSize;
+    fetchImageList();
     currentPage += 1;
+}
+
+function handlePerPageClick() {
+    pageSize = Number(perPageElement.value);
+    currentPage = 1;
+    offset = 0;
+    fetchImageList();
 }
 
 /**************************************
@@ -125,3 +140,4 @@ function handleNextClick() {
 document.querySelector('button[type=submit').addEventListener('click', handleSubmit);
 document.querySelector('.js-prev').addEventListener('click', handlePrevClick);
 document.querySelector('.js-next').addEventListener('click', handleNextClick);
+document.querySelector('.js-per-page-selector').addEventListener('change', handlePerPageClick);
