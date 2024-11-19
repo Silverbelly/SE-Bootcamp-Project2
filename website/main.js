@@ -32,7 +32,7 @@ function renderPagination() {
     paginationContainer.classList.remove('visually-hidden');
     nextButton.classList.remove('disabled');
     prevButton.classList.remove('disabled');
-    if (totalPages === 1) 
+    if (totalPages <= 1) 
         paginationContainer.classList.add('visually-hidden');
     if (currentPage === totalPages) 
         nextButton.classList.add('disabled');
