@@ -47,3 +47,6 @@ body {
     visibility: hidden;
 }
 
+.navbar-collapse {
+    justify-content: right;
+}

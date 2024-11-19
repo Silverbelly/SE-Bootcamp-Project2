@@ -1,9 +1,4 @@
 // variable initialization
-let apiEndpointInfo = {
-    endpoint: 'search',
-    qsParmName: 'q',
-};
-
 let totalPages = 1;
 let currentPage = 1;
 let offset = 0;
@@ -11,6 +6,7 @@ let offset = 0;
 // constants initialization
 const API_KEY = '2H1hfhYVflid5QGVztHMFdkI6hOwXjb2';
 const PAGE_SIZE = 15;
+const qsParm = (searchOption) => searchOption === 'search' ? 'q' : searchOption === 'translate' ? 's' : 'tag';
 
 // render content functions
 function inializePagination() {
@@ -72,13 +68,11 @@ function renderImages(imageList) {
     renderPagination();
 }
 
-function getUrl(keyword, offset) {
-    let url = `https://api.giphy.com/v1/gifs/${apiEndpointInfo.endpoint}?api_key=${API_KEY}&limit=${PAGE_SIZE}`;
+function getUrl(searchOption, keyword) {
+    let url = `https://api.giphy.com/v1/gifs/${searchOption}?api_key=${API_KEY}&limit=${PAGE_SIZE}&offset=${offset}`; 
     if (keyword.trim() !== '') {
-        url += `&${apiEndpointInfo.qsParmName}=${keyword}`;
+        url += `&${qsParm(searchOption)}=${keyword}`;
     }
-    url += `&offset=${offset}`;
-    console.log(url);
     return url;
 }
 
@@ -89,24 +83,28 @@ async function fetchImageList(keyword, offset) {
     renderImages(data);
 }
 
-// event handler functions
-function handleSearchTypeClick(event) {
-    event.preventDefault();
-    document.querySelector('.js-search-type').innerText = event.target.innerText;
-    let endpoint = event.target.dataset.endpoint;
-    apiEndpointInfo.endpoint = endpoint;
-    apiEndpointInfo.qsParmName = endpoint === 'search' ? 'q' : endpoint === 'translate' ? 's' : 'tag';
-}
+/**************************************
+    event handler functions 
+***************************************/
 
 function handleSubmit(event) {
     event.preventDefault();
-    inializePagination();
+
+    let searchOption = document.getElementById('search-option').value;
     let keyword = document.getElementById('keyword').value;
-    if (apiEndpointInfo.endpoint !== 'random' && keyword.trim() === '') {
-        alert('Please provide a keyword to search.');
+    // check the input
+    if (searchOption === '') {
+        alert('Select a Search option');
+        return;
+    } 
+    if (searchOption !== 'random' && keyword === '') {
+        alert('Please enter a keyword.');
         return;
     }
-    fetchImageList(keyword, offset);
+
+    // input is good, proceed
+    inializePagination();
+    fetchImageList(searchOption, keyword);
 }
 
 function handlePrevClick() {
@@ -121,11 +119,9 @@ function handleNextClick() {
     currentPage += 1;
 }
 
-// event listeners
-for (let element of document.querySelectorAll('.dropdown-item')) {
-    element.addEventListener('click', handleSearchTypeClick);
-}
-
+/**************************************
+    event listeners
+***************************************/
 document.querySelector('button[type=submit').addEventListener('click', handleSubmit);
 document.querySelector('.js-prev').addEventListener('click', handlePrevClick);
 document.querySelector('.js-next').addEventListener('click', handleNextClick);
