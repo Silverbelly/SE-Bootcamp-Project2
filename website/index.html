@@ -29,16 +29,22 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <form class="d-flex" role="search">
-                            <select class="form-select me-3" id="query-type" aria-label="Search options">
-                                <option value="" selected>Query type...</option>
-                                <option value="random">Random</option>
-                                <option value="search">Search</option>
-                                <option value="translate">Translate</option>
-                            </select>
-                            <input class="form-control me-3" id="keyword" type="search" placeholder="Keyword" aria-label="Search" />
-                            <button class="btn btn-outline-light" type="submit">Search</button>
-                        </form>
+                        <ul class="navbar-nav mb-lg-0">
+                            <li class="nav-item me-3">
+                                <select class="form-select" id="query-type" aria-label="Search options">
+                                    <option value="" selected>Query type...</option>
+                                    <option value="random">Random</option>
+                                    <option value="search">Search</option>
+                                    <option value="translate">Translate</option>
+                                </select>
+                            </li>
+                            <li class="nav-item me-3">
+                                <input class="form-control" id="keyword" type="search" placeholder="Keyword" aria-label="Search" />
+                            </li>
+                            <li class="nav-item">
+                                <button class="btn btn-outline-light" type="submit">Search</button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </nav>

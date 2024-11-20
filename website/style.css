@@ -24,6 +24,16 @@ body {
     justify-content: right;
 }
 
+@media screen and (max-width: 768px) {
+    #query-type, #keyword {
+        max-width: 45%;
+    }
+}
+@media screen and (max-width: 360px) {
+    #query-type, #keyword {
+        max-width: 100%;
+    }
+}
 @media screen and (max-width: 320px) {
     .image-list-item {
         width: 300px;
