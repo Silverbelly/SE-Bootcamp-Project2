@@ -13,7 +13,6 @@ let keywordElement;
 let perPageElement;
 
 window.addEventListener('load', (event) => {
-    console.log('Page is fully loaded');
     queryTypeElement = document.getElementById('query-type');
     keywordElement = document.getElementById('keyword');
     perPageElement = document.getElementById('per-page-selector');
