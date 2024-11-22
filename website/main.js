@@ -4,13 +4,24 @@ let totalItems = 0;
 let totalPages = 1;
 let currentPage = 1;
 let offset = 0;
-let queryTypeElement = document.getElementById('query-type');
-let keywordElement = document.getElementById('keyword');
-let perPageElement = document.getElementById('per-page-selector');
+
+// using the event listener for the window load event to be sure
+// the dom has completed load before grabbing the elements which
+// will be used
+let queryTypeElement;
+let keywordElement;
+let perPageElement;
+
+window.addEventListener('load', (event) => {
+    console.log('Page is fully loaded');
+    queryTypeElement = document.getElementById('query-type');
+    keywordElement = document.getElementById('keyword');
+    perPageElement = document.getElementById('per-page-selector');
+});
 
 // constants initialization
 const API_KEY = '2H1hfhYVflid5QGVztHMFdkI6hOwXjb2';
-const qsParm = (searchOption) => searchOption === 'search' ? 'q' : searchOption === 'translate' ? 's' : 'tag';
+const qsParm = (searchOption) => (searchOption === 'search' ? 'q' : searchOption === 'translate' ? 's' : 'tag');
 
 // render content functions
 function inializePagination() {
@@ -26,19 +37,15 @@ function renderPagination() {
     let prevButton = document.querySelector('.js-prev');
 
     pageControlElement.classList.remove('visually-hidden');
-    if (totalItems <= 10)
-        pageControlElement.classList.add('visually-hidden');
+    if (totalItems <= 10) pageControlElement.classList.add('visually-hidden');
 
     paginationContainer.classList.remove('visually-hidden');
     nextButton.classList.remove('disabled');
     prevButton.classList.remove('disabled');
-    if (totalPages <= 1) 
-        paginationContainer.classList.add('visually-hidden');
-    if (currentPage === totalPages) 
-        nextButton.classList.add('disabled');
-    else if (currentPage === 1) 
-        prevButton.classList.add('disabled');
-    
+    if (totalPages <= 1) paginationContainer.classList.add('visually-hidden');
+    if (currentPage === totalPages) nextButton.classList.add('disabled');
+    else if (currentPage === 1) prevButton.classList.add('disabled');
+
     document.querySelector('.js-page-info').innerText = `${currentPage} of ${totalPages}`;
 }
 
@@ -76,8 +83,8 @@ function renderImages(imageList) {
 
 function getUrl() {
     let queryType = queryTypeElement.value;
-    let keyword = keywordElement.value
-    let url = `https://api.giphy.com/v1/gifs/${queryType}?api_key=${API_KEY}&limit=${pageSize}&offset=${offset}`; 
+    let keyword = keywordElement.value;
+    let url = `https://api.giphy.com/v1/gifs/${queryType}?api_key=${API_KEY}&limit=${pageSize}&offset=${offset}`;
     if (keyword.trim() !== '' && queryType != 'random') {
         url += `&${qsParm(queryType)}=${keyword}`;
     }
@@ -104,7 +111,7 @@ function handleSubmit(event) {
     if (queryType === '') {
         alert('Select a Search option');
         return;
-    } 
+    }
     if (queryType !== 'random' && keyword === '') {
         alert('Please enter a keyword.');
         return;
